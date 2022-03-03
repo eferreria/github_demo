@@ -4,6 +4,7 @@ view: products {
   drill_fields: [id]
 
   dimension: id {
+    label: "Product ID"
     primary_key: yes
     type: number
     sql: ${TABLE}."ID" ;;
@@ -17,11 +18,17 @@ view: products {
   dimension: category {
     type: string
     sql: ${TABLE}."CATEGORY" ;;
+    drill_fields: [brand, cost, department]
   }
 
   dimension: cost {
     type: number
     sql: ${TABLE}."COST" ;;
+  }
+
+  measure: avg_cost {
+    type: average
+    sql: ${cost} ;;
   }
 
   dimension: department {
@@ -37,6 +44,7 @@ view: products {
   dimension: name {
     type: string
     sql: ${TABLE}."NAME" ;;
+    drill_fields: [brand, category, department, retail_price]
   }
 
   dimension: retail_price {

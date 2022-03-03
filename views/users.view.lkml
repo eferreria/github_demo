@@ -4,6 +4,7 @@ view: users {
   drill_fields: [id]
 
   dimension: id {
+    label: "User ID"
     primary_key: yes
     type: number
     sql: ${TABLE}."ID" ;;
@@ -12,6 +13,15 @@ view: users {
   dimension: age {
     type: number
     sql: ${TABLE}."AGE" ;;
+    required_access_grants: [user_id]
+
+  }
+
+  dimension: age_tier {
+    type: tier
+    sql: ${age} ;;
+    tiers: [10, 20, 30, 40, 50, 60]
+    style: integer
   }
 
   dimension: city {
@@ -86,6 +96,12 @@ view: users {
 
   measure: count {
     type: count
-    drill_fields: [id, first_name, last_name, events.count, order_items.count]
+    drill_fields: [id, first_name, state]
+  }
+
+  measure: usa_count {
+    type: count
+    filters: [users.country: "USA"]
+    drill_fields: [id, first_name, gender, state]
   }
 }

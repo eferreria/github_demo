@@ -4,6 +4,7 @@ view: inventory_items {
   drill_fields: [id]
 
   dimension: id {
+    label: "Inventory Item ID"
     primary_key: yes
     type: number
     sql: ${TABLE}."ID" ;;
@@ -50,7 +51,7 @@ view: inventory_items {
 
   dimension: product_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."PRODUCT_ID" ;;
   }
 

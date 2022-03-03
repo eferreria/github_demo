@@ -39,7 +39,7 @@ view: order_items {
 
   dimension: inventory_item_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."INVENTORY_ITEM_ID" ;;
   }
 
@@ -62,10 +62,40 @@ view: order_items {
     sql: ${TABLE}."RETURNED_AT" ;;
   }
 
-  dimension: sale_price {
+ # dimension: returned_status {
+  #  type: yesno
+  #}
+
+  #measure: returned_count {
+  #  type: count_distinct
+  #  sql: sql: ${TABLE}."ID";;
+   # drill_fields: [detail*]
+   # filters: [returned_status: "Yes"]  }
+
+  measure: sale_price {
     type: number
     sql: ${TABLE}."SALE_PRICE" ;;
+    value_format: "$#.00;($#.00)"
   }
+
+  measure: total_amount_of_order_usd {
+    type: sum
+    sql:${TABLE}."SALE_PRICE" ;;
+    value_format: "$#.00;($#.00)"
+  }
+
+  measure: avg_sale_price {
+    type: average
+    sql: ${TABLE}."SALE_PRICE" ;;
+    value_format_name: usd
+  }
+
+  dimension: total_amount_of_order_tier {
+    type: tier
+    sql: sum(${TABLE}."SALE_PRICE" ) ;;
+    tiers: [0, 10, 50, 150, 500, 1000]
+  }
+
 
   dimension_group: shipped {
     type: time
@@ -80,6 +110,10 @@ view: order_items {
     ]
     sql: ${TABLE}."SHIPPED_AT" ;;
   }
+  dimension: shipping_days {
+    type: number
+    sql: date_diff(${shipped_date}, ${created_date}, DAY) ;;
+  }
 
   dimension: status {
     type: string
@@ -88,7 +122,7 @@ view: order_items {
 
   dimension: user_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."USER_ID" ;;
   }
 
